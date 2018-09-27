@@ -2,6 +2,6 @@ service vendor.hwcomposer-2-1 /vendor/bin/hw/android.hardware.graphics.composer@
     class hal animation
     user system
     group graphics drmrpc
-    capabilities SYS_NICE
+    capabilities SYS_NICE SYS_ADMIN
     onrestart restart surfaceflinger
     writepid /dev/cpuset/system-background/tasks
