@@ -22,12 +22,24 @@
 #include <hidl/HidlTransportSupport.h>
 #include <hidl/LegacySupport.h>
 
+#include <cutils/properties.h>
+
+using android::status_t;
 using android::hardware::configureRpcThreadpool;
 using android::hardware::joinRpcThreadpool;
-
+using android::hardware::registerPassthroughServiceImplementation;
 using android::hardware::keymaster::V3_0::IKeymasterDevice;
-using android::hardware::defaultPassthroughServiceImplementation;
+
 
 int main() {
-    return defaultPassthroughServiceImplementation<IKeymasterDevice>();
+    configureRpcThreadpool(1, true);
+    status_t result = registerPassthroughServiceImplementation<IKeymasterDevice>("default");
+    if (result != android::OK) {
+        return result;
+    }
+    property_set("keymaster.status", "ready");
+
+    joinRpcThreadpool();
+
+    return -1;
 }
