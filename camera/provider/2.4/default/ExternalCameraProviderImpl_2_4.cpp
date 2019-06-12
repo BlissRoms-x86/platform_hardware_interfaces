@@ -65,7 +65,8 @@ bool matchDeviceName(const hidl_string& deviceName, std::string* deviceVersion,
 ExternalCameraProviderImpl_2_4::ExternalCameraProviderImpl_2_4() :
         mCfg(ExternalCameraConfig::loadFromCfg()),
         mHotPlugThread(this) {
-    mHotPlugThread.run("ExtCamHotPlug", PRIORITY_BACKGROUND);
+    // FIXME: Camera provider is not ready. So, run this later.
+    //mHotPlugThread.run("ExtCamHotPlug", PRIORITY_BACKGROUND);
 
     mPreferredHal3MinorVersion =
         property_get_int32("ro.vendor.camera.external.hal3TrebleMinorVersion", 4);
@@ -103,7 +104,7 @@ Return<Status> ExternalCameraProviderImpl_2_4::setCallback(
             mCallbacks->cameraDeviceStatusChange(pair.first, pair.second);
         }
     }
-
+    mHotPlugThread.run("ExtCamHotPlug", PRIORITY_BACKGROUND);
     return Status::OK;
 }
 
