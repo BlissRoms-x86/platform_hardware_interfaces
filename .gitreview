@@ -1,0 +1,5 @@
+[gerrit]
+host=review.blissroms.com
+port=29418
+project=platform_hardware_interfaces.git
+defaultbranch=q
