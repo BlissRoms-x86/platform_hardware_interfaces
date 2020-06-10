@@ -21,6 +21,7 @@
 #include <regex>
 #include <sys/inotify.h>
 #include <errno.h>
+#include <unistd.h>
 #include <linux/videodev2.h>
 #include <cutils/properties.h>
 #include "ExternalCameraProviderImpl_2_4.h"
@@ -229,13 +230,18 @@ void ExternalCameraProviderImpl_2_4::addExternalCamera(const char* devName) {
 }
 
 void ExternalCameraProviderImpl_2_4::deviceAdded(const char* devName) {
-    {
+    int status = 0;
+    // sometimes device nodes not enumated hence it fails retry before confirm
+    for (int i = 0; i < 3; i++) {
+        if (status == 1)
+            break;
         base::unique_fd fd(::open(devName, O_RDWR));
         if (fd.get() < 0) {
-            ALOGE("%s open v4l2 device %s failed:%s", __FUNCTION__, devName, strerror(errno));
-            return;
+            ALOGE("%s open v4l2 device %s failed:%s and iteration %d", __FUNCTION__, devName, strerror(errno), i);
+            usleep(200000);
+            continue;
         }
-
+        status = 1;
         struct v4l2_capability capability;
         int ret = ioctl(fd.get(), VIDIOC_QUERYCAP, &capability);
         if (ret < 0) {
