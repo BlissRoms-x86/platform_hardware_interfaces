@@ -38,7 +38,7 @@ cc_defaults {
     static_libs: [
         "android.hardware.health@1.0-convert",
         "libbatterymonitor",
-        "libhealthloop",
+        "libhealthloop.intel",
         "libhealth2impl",
     ],
 }
