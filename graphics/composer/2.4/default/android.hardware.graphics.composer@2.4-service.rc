@@ -5,3 +5,4 @@ service vendor.hwcomposer-2-4 /vendor/bin/hw/android.hardware.graphics.composer@
     capabilities SYS_NICE
     onrestart restart surfaceflinger
     writepid /dev/cpuset/system-background/tasks
+    disabled
