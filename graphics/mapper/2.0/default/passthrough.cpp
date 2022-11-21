@@ -13,12 +13,18 @@
  * limitations under the License.
  */
 
+#include <cutils/properties.h>
 #include <android/hardware/graphics/mapper/2.0/IMapper.h>
 #include <mapper-passthrough/2.0/GrallocLoader.h>
 
 using android::hardware::graphics::mapper::V2_0::IMapper;
 using android::hardware::graphics::mapper::V2_0::passthrough::GrallocLoader;
 
+char default_mapper[PROPERTY_VALUE_MAX];
+
 extern "C" IMapper* HIDL_FETCH_IMapper(const char* /*name*/) {
+    property_get("debug.ui.default_mapper", default_mapper, "");
+    if (atoi(default_mapper) == 2) {
     return GrallocLoader::load();
+    } else {return NULL;}
 }
