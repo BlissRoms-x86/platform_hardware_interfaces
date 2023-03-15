@@ -946,9 +946,11 @@ void ExternalCameraDevice::updateFpsBounds(
     }
 
     getFrameRateList(fd, fpsUpperBound, &format);
-    if (!format.frameRates.empty()) {
-        outFmts.push_back(format);
-    }
+    // HAL tries to support even if the Camera sensor retuns
+    // empty supported frame rate list. This will help to
+    // support different types of Cameras since some
+    // USB Cameras will not return the proper frame rates.
+    outFmts.push_back(format);
 }
 
 void ExternalCameraDevice::initSupportedFormatsLocked(int fd) {
